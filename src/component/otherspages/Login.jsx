@@ -1,15 +1,20 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import app from "../../config/firebase.config";
 import { AuthContext } from "../../context/Authcontext";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const { signIn, loading } = useContext(AuthContext);
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const auth = getAuth(app)
-  console.log(signIn)
+  // console.log(signIn)
+  const location = useLocation()
+  const from = location.state?.from?.pathname || '/'
+  console.log(from)
+
   // Handle email/password login
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -19,7 +24,14 @@ const Login = () => {
 
     try {
       await signIn(email, password);
-      navigate("/");
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Successfully registered",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      navigate(from);
     } catch (error) {
       setError(error.message);
     }
@@ -30,7 +42,14 @@ const Login = () => {
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
-      navigate("/");
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Successfully registered",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      navigate(from);
     } catch (error) {
       setError(error.message);
     }
