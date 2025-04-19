@@ -2,15 +2,22 @@ import { Link } from 'react-router-dom';
 import logo from '../../../public/logo.webp';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../context/Authcontext';
+import Swal from 'sweetalert2';
 
 const Header = () => {
   const { users, logout } = useContext(AuthContext);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+  console.log(users)
   const handleSignOut = () => {
     logout()
       .then(() => {
-        console.log('User signed out successfully');
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Successfully Signed Out",
+          showConfirmButton: false,
+          timer: 1500
+        });
         setIsDropdownOpen(false);
       })
       .catch(error => {
@@ -40,7 +47,7 @@ const Header = () => {
         {/* Navigation + User Section */}
         <div className="flex items-center gap-6">
           {/* Donation Button */}
-          <button className="bg-[#008E48] hover:bg-[#00753e] text-white px-6 py-2 rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-[#008E48]/30">
+          <button className="bg-[#008E48] hover:bg-[#00753e] text-white px-6 py-2 rounded-full font-medium transition-all duration-300 hover:shadow-[#008E48]/30">
             Donation
           </button>
 
@@ -88,7 +95,7 @@ const Header = () => {
             </div>
           ) : (
             <Link to={'signin'}>
-              <button className="bg-[#008E48] hover:bg-[#00753e] text-white px-6 py-2 rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-[#008E48]/30">
+              <button className="bg-[#008E48] hover:bg-[#00753e] text-white px-6 py-2 rounded-full font-medium transition-all duration-300 hover:shadow-[#008E48]/30">
                 Sign In
               </button>
             </Link>
