@@ -1,13 +1,34 @@
 import { Link } from 'react-router-dom';
 import logo from '../../../public/logo.webp';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/Authcontext';
 import Swal from 'sweetalert2';
+import { getUserData } from '../../hook/getUserData';
 
 const Header = () => {
   const { users, logout } = useContext(AuthContext);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [image,setImage] = useState('')
   console.log(users)
+  
+  
+
+  useEffect(() => {
+      if (users?.email) {
+        const fetchUserData = async () => {
+          try {
+            const data = await getUserData(users.email);
+            console.log(data)
+            setImage(data.data.photoUrl);
+          } catch (error) {
+            console.error("Error fetching user data:", error);
+          } 
+        };
+        fetchUserData();
+      } 
+    }, [users]);
+
+
   const handleSignOut = () => {
     logout()
       .then(() => {
@@ -59,7 +80,7 @@ const Header = () => {
                 className="flex items-center gap-2 focus:outline-none"
               >
                 <div className="h-10 w-10 rounded-full bg-[#008E48] flex items-center justify-center text-white font-bold">
-                  {users.email.charAt(0).toUpperCase()}
+                  <img className='h-10 w-10 rounded-full' src={image} alt="" />
                 </div>
                 <svg 
                   className={`w-4 h-4 text-gray-600 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}

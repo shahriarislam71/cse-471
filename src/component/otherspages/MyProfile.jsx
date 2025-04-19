@@ -1,11 +1,12 @@
 import { useContext, useState, useEffect } from 'react';
-import { AuthContext } from '../../context/Authcontext';
 import { updateProfile } from 'firebase/auth';
 import { getAuth } from 'firebase/auth';
 import app from '../../config/firebase.config';
+import axios from 'axios';
+import { AuthContext } from '../../context/Authcontext';
 
 const MyProfile = () => {
-  const { users, loading } = useContext(AuthContext);
+  const { users, loading, updateUser } = useContext(AuthContext);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
     displayName: '',
@@ -13,6 +14,7 @@ const MyProfile = () => {
     photoURL: ''
   });
   const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const auth = getAuth(app);
 
   useEffect(() => {
@@ -36,15 +38,39 @@ const MyProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateProfile(auth.currentUser, {
-        displayName: formData.displayName,
-        photoURL: formData.photoURL
+      // // Update Firebase profile (displayName and photoURL)
+      // await updateProfile(auth.currentUser, {
+      //   displayName: formData.displayName,
+      //   photoURL: formData.photoURL
+      // });
+
+      // Update backend user data
+      const response = await axios.put(`http://localhost:5000/user?email=${users.email}`, {
+        name: formData.displayName,
+        photoUrl: formData.photoURL
       });
-      setSuccessMessage('Profile updated successfully!');
-      setTimeout(() => setSuccessMessage(''), 3000);
-      setEditMode(false);
+
+      if (response.data.success) {
+        setSuccessMessage('Profile updated successfully!');
+        setErrorMessage('');
+        setTimeout(() => setSuccessMessage(''), 3000);
+        setEditMode(false);
+        
+        // Refresh user data in context
+        if (updateUser) {
+          await updateUser({
+            displayName: formData.displayName,
+            photoURL: formData.photoURL
+          });
+        }
+      } else {
+        throw new Error(response.data.message || 'Failed to update profile');
+      }
     } catch (error) {
       console.error('Error updating profile:', error);
+      setErrorMessage(error.response?.data?.message || error.message || 'Failed to update profile');
+      setSuccessMessage('');
+      setTimeout(() => setErrorMessage(''), 3000);
     }
   };
 
@@ -86,6 +112,11 @@ const MyProfile = () => {
             {successMessage && (
               <div className="mb-6 p-3 bg-green-100 text-green-800 rounded-lg text-center">
                 {successMessage}
+              </div>
+            )}
+            {errorMessage && (
+              <div className="mb-6 p-3 bg-red-100 text-red-800 rounded-lg text-center">
+                {errorMessage}
               </div>
             )}
 
