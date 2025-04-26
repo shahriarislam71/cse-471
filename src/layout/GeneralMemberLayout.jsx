@@ -1,9 +1,9 @@
 import { Outlet } from "react-router-dom";
-import GeneralMemberDashboard from "../component/dashboard/GeneralMemberDashboard";
 import Header from "../component/home/Header";
 import Footer from "../component/home/Footer";
 import { AuthContext } from "../context/Authcontext";
 import { useContext } from "react";
+import GeneralMemberDashboard from "../component/dashboard/GeneralMemberDashboard";
 
 const GeneralMemberLayout = () => {
     const {loading} = useContext(AuthContext)

@@ -12,6 +12,7 @@ import TeacherLayout from "../layout/TeacherLayout";
 import PermanentVolunteerLayout from "../layout/PermanentVolunteerLayout";
 import AdminLayout from "../layout/AdminLayout";
 import Privateroute from "./PrivateRoute";
+import VolunteerRegistration from "../component/GeneralMemberComponent/VolunteerRegistration";
 
 
 // import ChefData from "../component/Home/Home/ChefData";
@@ -40,6 +41,11 @@ const route = createBrowserRouter([
             {
                 index: true,
                 element: <Home></Home>
+            }
+            ,
+            {path: 'volunteer-registration',
+            element: <VolunteerRegistration></VolunteerRegistration>
+
             }
         ]
     },
