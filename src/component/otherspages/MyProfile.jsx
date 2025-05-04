@@ -45,7 +45,7 @@ const MyProfile = () => {
       // });
 
       // Update backend user data
-      const response = await axios.put(`http://localhost:5000/user?email=${users.email}`, {
+      const response = await axios.put(`https://health-and-sanitation-backend.vercel.app/user?email=${users.email}`, {
         name: formData.displayName,
         photoUrl: formData.photoURL
       });

@@ -33,7 +33,7 @@ const Signup = () => {
       await createUser(formData.email, formData.password);
       
       // 2. Save user data to MongoDB
-      const response = await fetch('http://localhost:5000/signup', {
+      const response = await fetch('https://health-and-sanitation-backend.vercel.app/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ const Signup = () => {
       const user = result.user;
 
       // 2. Save/update user in MongoDB
-      const response = await fetch('http://localhost:5000/google-signin', {
+      const response = await fetch('https://health-and-sanitation-backend.vercel.app/google-signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

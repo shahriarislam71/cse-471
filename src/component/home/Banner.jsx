@@ -1,37 +1,59 @@
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const Banner = () => {
-    const carouselItems = [
-        {
-            id: 1,
-            title: "Community Health Initiative",
-            description: "Join our free health checkup camp this weekend",
-            image: "https://cdn.expresshealthcare.in/wp-content/uploads/2020/01/03174832/Medical-camp-750x409.jpg",
-            ctaText: "Learn More",
-            ctaLink: "/events/health-camp",
-            overlayColor: "rgba(5, 150, 105, 0.7)"
-        },
-        {
-            id: 2,
-            title: "Sanitation Awareness Program",
-            description: "Learn about proper sanitation practices in your community",
-            image: "https://thumbs.dreamstime.com/b/medical-camp-13742635.jpg",
-            ctaText: "Register Now",
-            ctaLink: "/events/sanitation",
-            overlayColor: "rgba(5, 150, 105, 0.7)"
-        },
-        {
-            id: 3,
-            title: "Volunteer Recruitment",
-            description: "Become a volunteer and make a difference",
-            image: "https://archesbd.com/wp-content/uploads/2015/07/Sanitation-min-1.jpg",
-            ctaText: "Join Us",
-            ctaLink: "/volunteer",
-            overlayColor: "rgba(5, 150, 105, 0.7)"
-        }
-    ];
-    
+    const [programs, setPrograms] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchQuickPrograms = async () => {
+            try {
+                const response = await axios.get("https://health-and-sanitation-backend.vercel.app/quick-programs");
+                setPrograms(response.data);
+                setLoading(false);
+            } catch (err) {
+                console.error("Error fetching programs:", err);
+                setError("Failed to load programs");
+                setLoading(false);
+            }
+        };
+
+        fetchQuickPrograms();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="px-[5%] py-[30px] mx-[35px]">
+                <div className="h-[500px] flex items-center justify-center bg-gray-100 rounded-2xl">
+                    <p>Loading programs...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="px-[5%] py-[30px] mx-[35px]">
+                <div className="h-[500px] flex items-center justify-center bg-gray-100 rounded-2xl">
+                    <p className="text-red-500">{error}</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (programs.length === 0) {
+        return (
+            <div className="px-[5%] py-[30px] mx-[35px]">
+                <div className="h-[500px] flex items-center justify-center bg-gray-100 rounded-2xl">
+                    <p>No quick programs available</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="px-[5%] py-[30px] mx-[35px]">
             <Carousel
@@ -68,30 +90,43 @@ const Banner = () => {
                     </button>
                 )}
             >
-                {carouselItems.map((item) => (
-                    <div key={item.id} className="relative group">
+                {programs.map((program) => (
+                    <div key={program._id} className="relative group">
                         <div className="h-[500px] w-full">
                             <img 
-                                src={item.image} 
-                                alt={item.title} 
+                                src={program.bannerImage} 
+                                alt={program.title} 
                                 className="w-full h-full object-cover brightness-90 group-hover:brightness-75 transition-all duration-500"
                             />
                         </div>
-                        <div 
-                            className="absolute inset-0 flex items-end justify-center p-8 md:p-12 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
-                            style={{ backgroundColor: item.overlayColor }}
-                        >
-                            <div className="max-w-3xl space-y-4 text-white">
-                                <h2 className="text-3xl md:text-4xl font-bold leading-tight">{item.title}</h2>
-                                <p className="text-lg md:text-xl opacity-90">{item.description}</p>
-                                <a 
-                                    href={item.ctaLink} 
-                                    className="inline-block bg-white text-gray-900 hover:bg-gray-100 px-6 py-3 rounded-lg font-medium text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
-                                >
-                                    {item.ctaText}
-                                </a>
+                        {program.programName !== "Announcement" ? (
+                            <div 
+                                className="absolute inset-0 flex items-end justify-center p-8 md:p-12 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
+                                style={{ backgroundColor: "rgba(5, 150, 105, 0.7)" }}
+                            >
+                                <div className="max-w-3xl space-y-4 text-white">
+                                    <h2 className="text-3xl md:text-4xl font-bold leading-tight">{program.title}</h2>
+                                    <p className="text-lg md:text-xl opacity-90">{program.subtitle}</p>
+                                    <a 
+                                        href={`/program/${program._id}`} 
+                                        className="inline-block bg-white text-gray-900 hover:bg-gray-100 px-6 py-3 rounded-lg font-medium text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                                    >
+                                        Learn More
+                                    </a>
+                                </div>
                             </div>
-                        </div>
+                        ) : (
+                            <div 
+                                className="absolute inset-0 flex items-center justify-center p-8 md:p-12 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
+                                style={{ backgroundColor: "rgba(5, 150, 105, 0.7)" }}
+                            >
+                                <div className="max-w-4xl text-center">
+                                    <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight">
+                                        {program.announcementText}
+                                    </h1>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 ))}
             </Carousel>

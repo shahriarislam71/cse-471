@@ -43,6 +43,7 @@ const PrivateRoute = ({ children }) => {
 
   // If user is trying to access the base dashboard, redirect them to their specific dashboard
   if (location.pathname === '/dashboard' && userData) {
+    console.log(userData)
     const dashboardPath = getDashboardPath(userData.data.volunteer_type);
     return <Navigate to={dashboardPath} replace />;
   }
@@ -59,7 +60,7 @@ const getDashboardPath = (volunteerType) => {
       return '/doctor-dashboard';
     case 'teacher':
       return '/teacher-dashboard';
-    case 'volunteer':
+    case 'general volunteer':
       return '/volunteer-dashboard';
     default:
       return '/general-member';

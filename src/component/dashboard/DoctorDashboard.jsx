@@ -1,18 +1,40 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const DoctorDashboard = () => {
+const GeneralMemberDashboard = () => {
     // Track active link
     const [activeLink, setActiveLink] = useState("Home");
+    const navigate = useNavigate();
 
     const handleLinkClick = (linkName) => {
         setActiveLink(linkName);
+        if (linkName === "Add Slots") {
+            navigate("add-slots");
+        }
+        else if (linkName === "Appointments") {
+            navigate("appointments"); 
+        }
+        else if (linkName === "Appointment History") {
+            navigate("successfull-appointment"); 
+        }
+        else if (linkName === "Request") {
+            navigate("doctor-request"); 
+        }
+        else if (linkName === "Assign Programs") {
+            navigate("doctor-assign-programs"); 
+        }
+        else if (linkName === "Home") {
+            navigate("."); 
+        }
     };
 
     const links = [
         "Home",
         "Appointments",
         "Appointment History",
-        "Request"
+        "Request",
+        "Add Slots",
+        "Assign Programs"
     ];
 
     return (
@@ -37,4 +59,4 @@ const DoctorDashboard = () => {
     );
 };
 
-export default DoctorDashboard;
+export default GeneralMemberDashboard;

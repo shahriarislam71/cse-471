@@ -1,33 +1,30 @@
-import { Link } from 'react-router-dom';
-import logo from '../../../public/logo.webp';
-import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../../context/Authcontext';
-import Swal from 'sweetalert2';
-import { getUserData } from '../../hook/getUserData';
+import { Link } from "react-router-dom";
+import logo from "../../../public/logo.webp";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../context/Authcontext";
+import Swal from "sweetalert2";
+import { getUserData } from "../../hook/getUserData";
 
 const Header = () => {
   const { users, logout } = useContext(AuthContext);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [image,setImage] = useState('')
-  console.log(users)
-  
-  
+  const [image, setImage] = useState("");
+  console.log(users);
 
   useEffect(() => {
-      if (users?.email) {
-        const fetchUserData = async () => {
-          try {
-            const data = await getUserData(users.email);
-            console.log(data)
-            setImage(data.data.photoUrl);
-          } catch (error) {
-            console.error("Error fetching user data:", error);
-          } 
-        };
-        fetchUserData();
-      } 
-    }, [users]);
-
+    if (users?.email) {
+      const fetchUserData = async () => {
+        try {
+          const data = await getUserData(users.email);
+          console.log(data);
+          setImage(data.data.photoUrl);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      };
+      fetchUserData();
+    }
+  }, [users]);
 
   const handleSignOut = () => {
     logout()
@@ -37,12 +34,12 @@ const Header = () => {
           icon: "success",
           title: "Successfully Signed Out",
           showConfirmButton: false,
-          timer: 1500
+          timer: 1500,
         });
         setIsDropdownOpen(false);
       })
-      .catch(error => {
-        console.error('Sign out error:', error);
+      .catch((error) => {
+        console.error("Sign out error:", error);
       });
   };
 
@@ -55,10 +52,10 @@ const Header = () => {
       <div className="flex justify-between items-center  mx-auto">
         {/* Logo + Title */}
         <Link to="/" className="flex items-center gap-3 group">
-          <img 
-            src={logo} 
-            alt="Logo" 
-            className="h-12 w-12 transition-transform duration-300 group-hover:scale-110" 
+          <img
+            src={logo}
+            alt="Logo"
+            className="h-12 w-12 transition-transform duration-300 group-hover:scale-110"
           />
           <h1 className="text-2xl font-bold text-[#008E48] bg-gradient-to-r from-[#008E48] to-[#00C853] bg-clip-text text-transparent">
             Health And Sanitation Platform
@@ -68,27 +65,36 @@ const Header = () => {
         {/* Navigation + User Section */}
         <div className="flex items-center gap-6">
           {/* Donation Button */}
-          <button className="bg-[#008E48] hover:bg-[#00753e] text-white px-6 py-2 rounded-full font-medium transition-all duration-300 hover:shadow-[#008E48]/30">
-            Donation
-          </button>
+          <Link to={'/donation'}>
+            <button className="bg-[#008E48] hover:bg-[#00753e] text-white px-6 py-2 rounded-full font-medium transition-all duration-300 hover:shadow-[#008E48]/30">
+              Donation
+            </button>
+          </Link>
 
           {/* User Section */}
           {users ? (
             <div className="relative">
-              <button 
+              <button
                 onClick={toggleDropdown}
                 className="flex items-center gap-2 focus:outline-none"
               >
                 <div className="h-10 w-10 rounded-full bg-[#008E48] flex items-center justify-center text-white font-bold">
-                  <img className='h-10 w-10 rounded-full' src={image} alt="" />
+                  <img className="h-10 w-10 rounded-full" src={image} alt="" />
                 </div>
-                <svg 
-                  className={`w-4 h-4 text-gray-600 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}
-                  fill="none" 
-                  viewBox="0 0 24 24" 
+                <svg
+                  className={`w-4 h-4 text-gray-600 transition-transform duration-200 ${
+                    isDropdownOpen ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </button>
 
@@ -96,7 +102,9 @@ const Header = () => {
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-100">
                   <div className="px-4 py-3 border-b border-gray-100">
-                    <p className="text-sm font-medium text-gray-900">{users.email}</p>
+                    <p className="text-sm font-medium text-gray-900">
+                      {users.email}
+                    </p>
                   </div>
                   <Link
                     to="/profile"
@@ -115,7 +123,7 @@ const Header = () => {
               )}
             </div>
           ) : (
-            <Link to={'signin'}>
+            <Link to={"signin"}>
               <button className="bg-[#008E48] hover:bg-[#00753e] text-white px-6 py-2 rounded-full font-medium transition-all duration-300 hover:shadow-[#008E48]/30">
                 Sign In
               </button>

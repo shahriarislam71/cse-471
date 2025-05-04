@@ -1,16 +1,33 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const VolunteerDashboard = () => {
     // Track active link
     const [activeLink, setActiveLink] = useState("Home");
+    const navigate = useNavigate();
 
     const handleLinkClick = (linkName) => {
         setActiveLink(linkName);
+        if (linkName === "Request") {
+            navigate("request");
+        }else if (linkName === "Participation History") {
+            navigate("volunteer-participation"); 
+        }
+        else if (linkName === "Emergency Cases") {
+            navigate("emergency-cases"); 
+        }
+        else if (linkName === "Rescued History") {
+            navigate("rescued-history"); 
+        }
+        else if (linkName === "Home") {
+            navigate("."); 
+        }
     };
 
     const links = [
         "Home",
         "Emergency Cases",
+        "Rescued History",
         "Request",
         "Participation History"
     ];

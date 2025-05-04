@@ -1,17 +1,23 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const TeacherDashboard = () => {
     // Track active link
     const [activeLink, setActiveLink] = useState("Home");
-
+    const navigate = useNavigate();
     const handleLinkClick = (linkName) => {
         setActiveLink(linkName);
+        if (linkName === "Assign Programs") {
+            navigate("assign-programs");
+        }
+        else if (linkName === "Home") {
+            navigate("."); 
+        }
     };
 
     const links = [
         "Home",
         "Assign Programs",
-        "Programs Participation List",
     ];
 
     return (
